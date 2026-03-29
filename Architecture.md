@@ -17,9 +17,9 @@ It is no longer described as a heavy platform fielded across the monitored envir
 
 ---
 
-![Vigilant ISSO Architecture](./vigilant-isso.png)
+![Vigilant ISSO Architecture](./vigilant-isso-2.png)
 
-The image above is the current architecture drawing derived from this document and should be updated to match the revised lean architecture described here.
+The image above is the current architecture drawing derived from this document and reflects the revised lean architecture described here.
 
 ---
 

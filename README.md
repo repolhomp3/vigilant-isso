@@ -148,9 +148,9 @@ The prototype is meant to prove that Vigilant ISSO can provide real ISSO value f
 
 ## Architecture Diagram
 
-![Vigilant ISSO Architecture](./vigilant-isso.png)
+![Vigilant ISSO Architecture](./vigilant-isso-2.png)
 
-The diagram above was derived from an earlier architecture pass. It should now be refreshed to match the updated lean MCP-based architecture described in `Architecture.md`.
+The diagram above reflects the updated lean MCP-based architecture described in `Architecture.md`.
 
 ## Notes on rigor
 
