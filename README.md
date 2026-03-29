@@ -245,6 +245,8 @@ That is serious. And useful.
 - `eks-architecture.md` — EKS-hosted platform design and bounded Bedrock reasoning layer
 - `implementation-roadmap.md` — phased build plan from concept to MVP, pilot, and controlled expansion
 - `eks-component-backlog.md` — EKS service/component backlog, deployment sequencing, and integration notes
+- `Architecture.md` — drawing-ready technical architecture spec for a professional technical writer or diagrammer
+- `vigilant-isso.png` — technical architecture drawing derived from `Architecture.md`
 - `pitch.md` — sharper product narrative and positioning
 
 ## Notes on rigor
