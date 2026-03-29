@@ -245,6 +245,11 @@ That is serious. And useful.
 - `eks-architecture.md` — EKS-hosted platform design and bounded Bedrock reasoning layer
 - `implementation-roadmap.md` — phased build plan from concept to MVP, pilot, and controlled expansion
 - `eks-component-backlog.md` — EKS service/component backlog, deployment sequencing, and integration notes
+- `mvp-prototype-scope.md` — exact first-environment prototype scope, explicit non-goals, and MVP definition of done
+- `terraform-module-map.md` — Terraform module/repo map for the first bounded prototype environment
+- `helm-topology.md` — Helm release model and 3-cluster EKS service topology for the prototype
+- `sprint-1-backlog.md` — practical sprint-1 backlog focused on the first end-to-end platform spine
+- `prototype-success-criteria.md` — how to judge whether the first bounded prototype actually worked
 - `Architecture.md` — drawing-ready technical architecture spec for a professional technical writer or diagrammer
 - `vigilant-isso.png` — technical architecture drawing derived from `Architecture.md`
 - `pitch.md` — sharper product narrative and positioning
