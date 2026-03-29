@@ -13,6 +13,10 @@ This is not a marketing overview. It is a drawing-ready technical architecture d
 
 ---
 
+![Vigilant ISSO Architecture](./vigilant-isso.png)
+
+The image above is the current technical architecture drawing derived from this document and should be kept aligned with future architectural revisions.
+
 ## 1. System Intent
 
 Vigilant ISSO is an **evidence-grounded ISSO operations platform** for organizations operating in **AWS GovCloud and on-prem CMMC Level 2 environments**.

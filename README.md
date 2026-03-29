@@ -249,6 +249,12 @@ That is serious. And useful.
 - `vigilant-isso.png` — technical architecture drawing derived from `Architecture.md`
 - `pitch.md` — sharper product narrative and positioning
 
+## Architecture Diagram
+
+![Vigilant ISSO Architecture](./vigilant-isso.png)
+
+The diagram above is derived from `Architecture.md` and represents the current target technical architecture for the platform.
+
 ## Notes on rigor
 
 The project docs deliberately separate:
