@@ -115,6 +115,21 @@ The prototype is meant to prove that Vigilant ISSO can provide real ISSO value f
 - auditable by default
 - least privilege for integrations
 - no fake “you are compliant” output
+- continuous evaluation over point-in-time theater
+- drift detection must lead to governed remediation, not just alerting
+- derivative summaries never replace primary evidence
+- decisions should preserve enough provenance to survive an assessor challenge
+
+## Governance posture
+
+Vigilant ISSO is intended to reflect disciplined ISSO/CISO operating behavior, not just automation enthusiasm.
+
+That means the project assumes:
+- **NIST-oriented assessment rigor** using evidence, review, and recurring evaluation patterns compatible with SP 800-171, SP 800-171A, and OSCAL-style traceability.
+- **AWS Well-Architected alignment** with explicit attention to Security, Reliability, Operational Excellence, and Cost Optimization tradeoffs.
+- **drift and remediation discipline** where baseline changes, stale evidence, and recurring findings become governed actions with owners, due dates, and closure validation.
+- **evidence quality controls** that distinguish raw source artifacts, normalized metadata, and AI- or analyst-produced derivative narratives.
+- **human approval for consequential outcomes** such as exception approval, readiness publication, and closure of materially significant issues.
 
 ---
 
@@ -150,12 +165,35 @@ The prototype is meant to prove that Vigilant ISSO can provide real ISSO value f
 - `mvp-scorecard.md` — weighted evaluation framework for judging runtime quality, documents, drift detection, remediation behavior, operator usefulness, and cost discipline
 - `rom-cost-and-implementation-plan.md` — high-level ROM and implementation framing, now updated to point to the lean direction
 - `pitch.md` — sharper product narrative and positioning
+- `security-assurance-pipeline.md` — GitLab CI security pipeline, SBOM, and security vulnerability reporting guidance for this repo
+- `.gitlab-ci.yml` — GitLab pipeline for inventory, Terraform checks, tfsec, checkov, trivy, bandit, SBOM generation, and report indexing
 
 ## Architecture Diagram
 
 ![Vigilant ISSO Architecture](./vigilant-isso-2.png)
 
 The diagram above reflects the updated lean MCP-based architecture described in `Architecture.md`.
+
+## CI / security checks for this repo
+
+This repository now includes a **GitLab CI pipeline** in `.gitlab-ci.yml` with the following stages:
+- **inventory** — detect whether Terraform, Python, or Docker-relevant inputs exist
+- **validate** — `terraform fmt` and `terraform validate` when Terraform is present
+- **security** — `tfsec`, `checkov`, `trivy`, and `bandit` where applicable
+- **sbom** — CycloneDX SBOM generation via Trivy
+- **report** — artifact indexing for reviewer-friendly retrieval
+
+### Current repository reality
+- no Terraform files were present when the pipeline was added
+- no Python files were present when the pipeline was added
+- no Dockerfiles were present when the pipeline was added
+
+The pipeline therefore records explicit skip evidence for Terraform- or Python-specific jobs instead of pretending the checks ran. The Docker absence is documented so future contributors can extend the pipeline intentionally if container build assets are introduced.
+
+### Security reporting expectations
+Pipeline outputs are meant to support **security vulnerability reporting (SVR)** and governed remediation, not auto-approval. Findings should be reviewed, normalized into tracked work, assigned to an owner, and closed only with validation evidence.
+
+See `security-assurance-pipeline.md` for the operating model and artifact details.
 
 ## Notes on rigor
 

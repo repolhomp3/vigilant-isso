@@ -10,12 +10,31 @@ The key idea: **evidence is not a blob attached to a ticket.** It is a first-cla
 
 ## Design principles
 
+These principles reflect NIST guidance on evidence quality (SP 800-171A, SP 800-53A), ISSO/CISO expectations for defensible artifacts, and AWS Well-Architected traceability requirements.
+
 1. **Source first** — preserve original identifiers and payloads.
+   - *NIST SP 800-171A assessment methodology: direct examination of specifications, mechanisms, activities, and individuals*
+
 2. **Provenance always** — who collected it, from where, when, and how do we know it has not changed?
+   - *NIST SP 800-53 AU-10, SI-7: non-repudiation and integrity verification; ISSO discipline: chain of custody is essential for audit defense*
+
 3. **Temporal truth** — evidence has an observation time and a collection time.
+   - *NIST SP 800-171 3.3.1, 3.3.2: time-stamped audit records; AWS Well-Architected: traceability for incident investigation*
+
 4. **Many-to-many relationships** — one artifact can support many controls; one control needs many evidence objects.
+   - *ISSO practice: evidence reuse across controls is efficient, but coverage must be explicit and reviewable*
+
 5. **Assessment-oriented** — model what an ISSO or assessor needs to decide whether implementation is credible.
+   - *NIST SP 800-171A: evidence must support determination of whether security requirements are satisfied*
+
 6. **Machine-readable where possible** — align conceptually with OSCAL even if the operational schema is custom. [1]
+   - *NIST OSCAL: interoperability standard for security assessment artifacts*
+
+7. **Evidence strength classification** — distinguish between direct observation, derived summary, and attestation.
+   - *CISO discipline: assessors weight evidence differently; primary evidence > derived > attestation alone*
+
+8. **Immutability for authoritative records** — finalized evidence and snapshots must be tamper-evident.
+   - *NIST SP 800-53 AU-9: protection of audit information; AWS Well-Architected: immutable logging patterns*
 
 ---
 

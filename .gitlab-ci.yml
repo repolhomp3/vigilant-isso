@@ -1,0 +1,219 @@
+stages:
+  - inventory
+  - validate
+  - security
+  - sbom
+  - report
+
+variables:
+  TF_IN_AUTOMATION: "true"
+  TF_INPUT: "false"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  GIT_DEPTH: "20"
+
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE
+
+.default_artifacts: &default_artifacts
+  when: always
+  expire_in: 30 days
+
+inventory:
+  stage: inventory
+  image: alpine:3.20
+  script:
+    - set -euo pipefail
+    - mkdir -p reports
+    - find . -type f \( -name '*.tf' -o -name '*.tfvars' -o -name '*.py' -o -name 'Dockerfile' -o -name '*.Dockerfile' -o -name 'Dockerfile.*' \) | sort > reports/repo-inventory.txt
+    - |
+      cat > reports/repo-profile.env <<EOF
+      HAS_TERRAFORM=$(find . -type f \( -name '*.tf' -o -name '*.tfvars' \) | grep -q . && echo true || echo false)
+      HAS_PYTHON=$(find . -type f \( -name '*.py' -o -name 'pyproject.toml' -o -name 'requirements*.txt' -o -name 'Pipfile' \) | grep -q . && echo true || echo false)
+      HAS_DOCKER=$(find . -type f \( -name 'Dockerfile' -o -name '*.Dockerfile' -o -name 'Dockerfile.*' \) | grep -q . && echo true || echo false)
+      EOF
+    - |
+      cat > reports/inventory-summary.md <<'EOF'
+      # Repository security inventory
+
+      This job records whether Terraform, Python, and Docker build inputs are present so later jobs can either run the correct checks or explain why they were skipped.
+      EOF
+  artifacts:
+    <<: *default_artifacts
+    paths:
+      - reports/repo-inventory.txt
+      - reports/repo-profile.env
+      - reports/inventory-summary.md
+    reports:
+      dotenv: reports/repo-profile.env
+
+terraform_fmt_validate:
+  stage: validate
+  image:
+    name: hashicorp/terraform:1.8.5
+    entrypoint: [""]
+  needs:
+    - job: inventory
+      artifacts: true
+  script:
+    - set -euo pipefail
+    - mkdir -p reports
+    - |
+      if [ "${HAS_TERRAFORM:-false}" != "true" ]; then
+        echo "No Terraform files detected; terraform fmt/validate skipped intentionally." | tee reports/terraform-validate.txt
+        exit 0
+      fi
+    - terraform fmt -check -diff -recursive | tee reports/terraform-fmt.txt
+    - |
+      find . -type f -name '*.tf' -print0 | xargs -0 -n1 dirname | sort -u > reports/terraform-dirs.txt
+    - |
+      while IFS= read -r dir; do
+        [ -n "$dir" ] || continue
+        echo "Validating $dir" | tee -a reports/terraform-validate.txt
+        terraform -chdir="$dir" init -backend=false -input=false -no-color >/tmp/terraform-init.log 2>&1 || {
+          cat /tmp/terraform-init.log >> reports/terraform-validate.txt
+          exit 1
+        }
+        terraform -chdir="$dir" validate -no-color | tee -a reports/terraform-validate.txt
+      done < reports/terraform-dirs.txt
+  artifacts:
+    <<: *default_artifacts
+    paths:
+      - reports/terraform-fmt.txt
+      - reports/terraform-validate.txt
+      - reports/terraform-dirs.txt
+
+terraform_tfsec:
+  stage: security
+  image:
+    name: aquasec/tfsec:v1.28.11
+    entrypoint: [""]
+  needs:
+    - job: inventory
+      artifacts: true
+  script:
+    - set -euo pipefail
+    - mkdir -p reports
+    - |
+      if [ "${HAS_TERRAFORM:-false}" != "true" ]; then
+        echo '{"note":"No Terraform files detected; tfsec skipped intentionally."}' > reports/tfsec.json
+        exit 0
+      fi
+    - tfsec . --format json --out reports/tfsec.json
+  artifacts:
+    <<: *default_artifacts
+    paths:
+      - reports/tfsec.json
+
+checkov_scan:
+  stage: security
+  image:
+    name: bridgecrew/checkov:3.2.127
+    entrypoint: [""]
+  needs:
+    - job: inventory
+      artifacts: true
+  script:
+    - set -euo pipefail
+    - mkdir -p reports
+    - checkov -d . -o cli | tee reports/checkov.txt
+    - checkov -d . -o json > reports/checkov.json || true
+    - checkov -d . -o sarif > reports/checkov.sarif || true
+  artifacts:
+    <<: *default_artifacts
+    paths:
+      - reports/checkov.txt
+      - reports/checkov.json
+      - reports/checkov.sarif
+
+trivy_fs_scan:
+  stage: security
+  image:
+    name: aquasec/trivy:0.53.0
+    entrypoint: [""]
+  needs:
+    - job: inventory
+      artifacts: true
+  script:
+    - set -euo pipefail
+    - mkdir -p reports
+    - trivy fs --scanners vuln,misconfig,secret --format json --output reports/trivy-fs.json .
+    - trivy fs --scanners misconfig --format sarif --output reports/trivy-misconfig.sarif .
+  artifacts:
+    <<: *default_artifacts
+    paths:
+      - reports/trivy-fs.json
+      - reports/trivy-misconfig.sarif
+
+bandit_scan:
+  stage: security
+  image: python:3.12-alpine
+  needs:
+    - job: inventory
+      artifacts: true
+  before_script:
+    - python -m pip install --no-cache-dir bandit
+  script:
+    - set -euo pipefail
+    - mkdir -p reports
+    - |
+      if [ "${HAS_PYTHON:-false}" != "true" ]; then
+        echo '{"note":"No Python files detected; bandit skipped intentionally."}' > reports/bandit.json
+        exit 0
+      fi
+    - bandit -r . -f json -o reports/bandit.json
+    - bandit -r . -f txt -o reports/bandit.txt || true
+  artifacts:
+    <<: *default_artifacts
+    paths:
+      - reports/bandit.json
+      - reports/bandit.txt
+
+trivy_sbom:
+  stage: sbom
+  image:
+    name: aquasec/trivy:0.53.0
+    entrypoint: [""]
+  script:
+    - set -euo pipefail
+    - mkdir -p reports
+    - trivy fs --format cyclonedx --output reports/repository-sbom.cdx.json .
+  artifacts:
+    <<: *default_artifacts
+    paths:
+      - reports/repository-sbom.cdx.json
+
+security_report_index:
+  stage: report
+  image: alpine:3.20
+  needs:
+    - inventory
+    - terraform_fmt_validate
+    - terraform_tfsec
+    - checkov_scan
+    - trivy_fs_scan
+    - bandit_scan
+    - trivy_sbom
+  script:
+    - set -euo pipefail
+    - mkdir -p reports
+    - |
+      cat > reports/security-report-index.md <<'EOF'
+      # Security report index
+
+      This pipeline publishes the following evidence for review, triage, and retention:
+
+      - `repo-inventory.txt` - detected Terraform, Python, and Docker-relevant inputs
+      - `terraform-fmt.txt` / `terraform-validate.txt` - infrastructure syntax and validation results when Terraform exists
+      - `tfsec.json` - Terraform static-analysis findings when Terraform exists
+      - `checkov.json` / `checkov.sarif` - infrastructure-as-code and configuration findings across the repository
+      - `trivy-fs.json` / `trivy-misconfig.sarif` - vulnerability, misconfiguration, and secret scanning output
+      - `bandit.json` - Python-focused security findings when Python exists
+      - `repository-sbom.cdx.json` - CycloneDX SBOM for the repository contents
+
+      Treat these outputs as machine-generated review inputs. Release decisions, POA&M closures, and formal assessment statements remain human-approved actions.
+      EOF
+  artifacts:
+    <<: *default_artifacts
+    paths:
+      - reports/security-report-index.md

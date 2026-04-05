@@ -21,6 +21,20 @@ It is the ongoing ability to answer, for a given assessment boundary and time pe
 - what exceptions or accepted risks exist
 - what changed since the last review
 
+### ISSO/CISO accountability framework
+
+This readiness model reflects explicit accountability requirements:
+
+| Role | Accountability |
+|------|---------------|
+| **ISSO** | Maintains daily operational awareness; validates evidence quality; routes findings to owners; prepares assessment packages; attests to accuracy of control implementation status |
+| **CISO** | Accountable for organizational security posture; approves material exceptions and risk acceptances; ensures adequate resourcing for remediation; reports to executive leadership on compliance status |
+| **Control Owner** | Responsible for implementing and maintaining assigned controls; provides evidence on demand; remediates findings within SLA; attests to control operation |
+| **Assessor** | Independent evaluation of control implementation against requirements; provides findings and recommendations |
+
+*NIST SP 800-37 RMF roles: ISSO, Authorizing Official, Common Control Provider, System Owner*
+*AWS Well-Architected: define responsibilities and ownership for security across the organization*
+
 ---
 
 ## Verified facts
@@ -113,7 +127,7 @@ For each control/domain/family/system, generate a packet containing:
 
 ## Readiness scoring
 
-Avoid a fake single “compliant/not compliant” number.
+Avoid a fake single "compliant/not compliant" number.
 
 Better model:
 - **evidence completeness score**
@@ -124,6 +138,19 @@ Better model:
 - **narrative confidence**
 
 This creates a much more honest readiness picture.
+
+### Scoring alignment with NIST and AWS guidance
+
+| Dimension | NIST Reference | AWS Well-Architected Alignment |
+|-----------|---------------|-------------------------------|
+| Evidence completeness | SP 800-171A assessment objectives | Security — ensure traceability |
+| Evidence freshness | SP 800-53 CA-7 continuous monitoring | Operational Excellence — evolve processes |
+| Open finding pressure | SP 800-53 CA-5 POA&M | Security — automate detection and response |
+| Remediation aging | SP 800-53 SI-2 flaw remediation | Operational Excellence — respond to events |
+| Exception burden | SP 800-53 CA-6 authorization | Security — implement a strong risk management program |
+| Narrative confidence | SP 800-171A assessment methodology | Operational Excellence — understand operational health |
+
+*CISO discipline: readiness is a leading indicator, not a lagging report; these dimensions surface problems before assessors do*
 
 ---
 

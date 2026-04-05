@@ -10,11 +10,25 @@ This should support POA&M-like discipline without pretending every environment u
 
 ## Principles
 
+These principles reflect NIST guidance (SP 800-53 CA-5, SI-2), OMB requirements for POA&M management, and practical ISSO/CISO discipline for remediation tracking.
+
 1. **Not every finding becomes a POA&M item.** Duplicates, accepted noise, and low-value ephemeral alerts should not become governance debris.
+   - *ISSO practice: signal-to-noise ratio matters; governance overhead should not exceed remediation value*
+
 2. **Every remediation item must be traceable to source observations.**
+   - *NIST SP 800-53 CA-5(1): POA&M items must link to authorizing officials, findings, and security assessments*
+
 3. **Closure requires validation evidence, not just status changes.**
+   - *NIST SP 800-53 SI-2: flaw remediation includes verification that the remediation is effective*
+   - *ISSO discipline: undocumented closure is not closure*
+
 4. **Exceptions and compensating measures must be visible.**
+   - *NIST SP 800-53 CA-5, PM-9: risk acceptance decisions must be documented with rationale and accountability*
+   - *CISO responsibility: accepted risk is still risk; it must be tracked, reviewed, and re-authorized periodically*
+
 5. **Aging matters.** Old unresolved items are posture signals in their own right.
+   - *OMB M-02-01 and subsequent guidance: POA&M aging is a metric for organizational risk management maturity*
+   - *AWS Well-Architected: Operational Excellence — manage operational events; aging items indicate process gaps*
 
 ---
 

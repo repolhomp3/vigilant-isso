@@ -44,20 +44,47 @@ That distinction drives the new design.
 
 ## 2. Architecture principles
 
+These principles align with NIST guidance (SP 800-53, SP 800-171), AWS Well-Architected Framework pillars (Security, Reliability, Operational Excellence, Cost Optimization), and practical ISSO/CISO discipline.
+
 1. **Lean control layer, not giant platform**
    - use the minimum persistent platform required to maintain trustworthy workflow and evidence state
+   - *AWS Well-Architected: Cost Optimization — right-size resources and avoid over-provisioning*
+
 2. **AWS-native first**
    - rely on AWS-native security/compliance sources wherever possible rather than copying or recreating their functions
+   - *AWS Well-Architected: Security — use AWS-managed services for defense in depth; Operational Excellence — reduce operational burden through managed services*
+
 3. **MCP-mediated service interactions**
    - use EKS-hosted MCP-style server/client components to query and operate on approved service surfaces
+   - *NIST SP 800-53 AC-4, SC-7: enforce information flow control and boundary protection through defined interfaces*
+
 4. **Evidence before narrative**
    - authoritative state comes from findings, evidence metadata, workflow records, and approval history
+   - *NIST SP 800-171 3.3.1, 3.3.2: create and retain system audit logs; ISSO discipline: evidence provenance is the foundation of audit defense*
+
 5. **AI as bounded reasoning, not source of truth**
    - Bedrock is used for summarization, mapping drafts, readiness narratives, and playbook assistance only
+   - *CISO responsibility: AI-assisted outputs require human validation before consequential decisions*
+
 6. **Human-in-the-loop for consequential compliance decisions**
    - no automatic compliance declarations, closure approvals, or exception approvals
+   - *NIST SP 800-53 AU-6, CA-7: human review of audit records and continuous monitoring outputs; ISSO accountability for attestations*
+
 7. **Cheap by design**
    - constrain persistent infrastructure, avoid unnecessary always-on components, and keep the first version narrow
+   - *AWS Well-Architected: Cost Optimization — implement expenditure awareness, match supply to demand*
+
+8. **Least privilege for integrations**
+   - MCP components and service accounts use scoped IAM roles with minimum required permissions
+   - *NIST SP 800-53 AC-6, NIST SP 800-171 3.1.5-3.1.8: least privilege and separation of duties*
+
+9. **Defense in depth**
+   - layered security controls across network, identity, application, and data tiers
+   - *AWS Well-Architected: Security — apply security at all layers; NIST SP 800-53 SC-7, PL-8*
+
+10. **Operational visibility and resilience**
+    - infrastructure and application telemetry enable rapid incident detection and recovery
+    - *AWS Well-Architected: Reliability — design for failure recovery; Operational Excellence — anticipate and respond to operational events*
 
 ---
 

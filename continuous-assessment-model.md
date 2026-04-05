@@ -38,7 +38,7 @@ The platform should answer, every day:
 
 ## Design principle
 
-The right unit of work is not “run an annual assessment.”
+The right unit of work is not "run an annual assessment."
 
 It is:
 - collect observations continuously
@@ -48,6 +48,16 @@ It is:
 - create immutable monthly and pre-assessment snapshots
 
 That is how an organization avoids falling out of compliance between certification events.
+
+### Alignment with NIST and AWS Well-Architected guidance
+
+This continuous model directly supports:
+
+- **NIST SP 800-53 CA-7 (Continuous Monitoring)**: ongoing awareness of information security, vulnerabilities, and threats
+- **NIST SP 800-137 (ISCM)**: maintaining ongoing awareness of information security, vulnerabilities, and threats to support organizational risk management decisions
+- **AWS Well-Architected Security Pillar**: operate with a strong identity foundation, enable traceability, automate security best practices, and prepare for security events
+- **AWS Well-Architected Operational Excellence**: anticipate failure, respond to events, and learn from operational experience
+- **ISSO/CISO Responsibility**: continuous monitoring is a delegation of Authority to Operate (ATO) responsibility; drift detection and evidence freshness directly support continuous authorization posture
 
 ---
 
@@ -335,7 +345,7 @@ This keeps Vigilant ISSO aligned with an assessment mindset instead of a pure al
 
 ## Anti-drift controls
 
-To specifically prevent post-certification drift, Vigilant ISSO should implement these checks:
+To specifically prevent post-certification drift, Vigilant ISSO should implement these checks. These align with NIST SP 800-53 CM (Configuration Management), SI (System and Information Integrity), and CA (Security Assessment and Authorization) control families.
 
 ### 1. Baseline drift detection
 Flag configuration changes against approved baselines for:
@@ -347,8 +357,13 @@ Flag configuration changes against approved baselines for:
 - EKS cluster policy and add-on posture
 - host hardening baselines on-prem
 
+*NIST SP 800-53 CM-2, CM-3, CM-6: baseline configuration, configuration change control, configuration settings*
+*AWS Well-Architected: Security — automate configuration management; Reliability — deploy using infrastructure as code*
+
 ### 2. Evidence decay detection
 Flag when a control is still narrated as implemented but its supporting evidence is stale, revoked, missing, or superseded.
+
+*ISSO discipline: evidence freshness is a leading indicator of control health; stale evidence is an audit finding waiting to happen*
 
 ### 3. Narrative contradiction detection
 Compare:
@@ -359,11 +374,20 @@ Compare:
 - exception register
 - previously generated control narratives
 
+*NIST SP 800-53 CA-2, CA-7: security assessments and continuous monitoring must identify discrepancies between documented and actual posture*
+*CISO responsibility: contradictions between policy and reality are material compliance risks*
+
 ### 4. Remediation recurrence detection
 Detect when the same issue family repeatedly reappears on the same systems or business unit.
 
+*NIST SP 800-53 CA-5, SI-2: plan of action and milestones, flaw remediation — track root cause, not just symptoms*
+*AWS Well-Architected: Operational Excellence — learn from all operational events*
+
 ### 5. Inheritance drift detection
 Detect when a shared service or inherited control source changed ownership, architecture, or evidence quality without downstream updates.
+
+*NIST SP 800-53 CA-9, SA-9: internal system connections and external system services — inherited control dependencies must be actively managed*
+*ISSO practice: shared service changes silently degrade downstream control posture if not tracked*
 
 ---
 

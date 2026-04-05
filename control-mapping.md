@@ -19,17 +19,36 @@ The system should help with mapping. It should not pretend mapping is trivial or
 
 ## Mapping design principles
 
+These principles reflect NIST SP 800-171A assessment methodology, CMMC assessment guidance, and practical ISSO/CISO discipline for defensible control mapping.
+
 1. **Normative text beats heuristic tags.**
    - Source-native compliance tags are useful, but final mapping must be anchored to the relevant requirement text and assessment logic.
+   - *NIST SP 800-171A: assessment objectives provide the authoritative basis for determining requirement satisfaction*
+
 2. **Mappings are many-to-many.**
    - One technical issue may affect several requirements.
    - One requirement may need many technical and documentary evidence objects.
+   - *ISSO practice: findings rarely map 1:1 to controls; accurate mapping requires understanding both the finding and the control implementation context*
+
 3. **Mappings must be versioned.**
    - Catalog version, internal mapping rule version, reviewer, and review date all matter.
+   - *NIST SP 800-53 CM-3: configuration change control; mappings are configuration items with change history requirements*
+
 4. **Coverage is not compliance.**
    - A mapped finding tells you a requirement is implicated, not that the entire requirement passes or fails.
+   - *CISO responsibility: avoid conflating "we looked at this control" with "this control is satisfied"*
+
 5. **Scoping matters before mapping.**
    - If an asset/system/user population is out of scope, the finding may still matter operationally but not belong in a specific CMMC assessment boundary.
+   - *CMMC Assessment Guide: scoping determines which assets and practices are in the assessment boundary; over-scoping or under-scoping introduces material risk*
+
+6. **Traceability is mandatory.**
+   - Every mapping assertion must link to source evidence, rationale, and reviewer accountability.
+   - *NIST SP 800-53 AU-10, SI-12: non-repudiation and information management; accountability for compliance claims*
+
+7. **Confidence levels are explicit.**
+   - Distinguish high-confidence automated mappings from analyst-inferred mappings requiring review.
+   - *AWS Well-Architected: Operational Excellence — define mechanisms to identify operational events and assess their impact*
 
 ---
 
