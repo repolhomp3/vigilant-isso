@@ -143,6 +143,11 @@ The prototype is meant to prove that Vigilant ISSO can provide real ISSO value f
 - `vigilant-isso.png` — current technical architecture drawing derived from `Architecture.md` (should be refreshed to match the revised architecture)
 - `day-in-the-life-of-vigilant-isso.md` — operational narrative showing what the system does and how the team interacts with it
 - `first-environment-cost-model.md` — tighter cost model for the current lean first-environment direction
+- `one-week-mvp-cost-model-us-gov-west-1.md` — one-week AWS GovCloud MVP run-cost model for gathering stats
+- `one-week-mvp-bom-cost-table-us-gov-west-1.md` — bill-of-materials style weekly AWS cost table for the MVP
+- `seven-day-budget-profile-us-gov-west-1.md` — recommended 7-day GovCloud deployment posture, budget target, and day-by-day evaluation profile
+- `mvp-cost-guardrails-checklist.md` — practical checklist for keeping the MVP from drifting upward in spend
+- `mvp-scorecard.md` — weighted evaluation framework for judging runtime quality, documents, drift detection, remediation behavior, operator usefulness, and cost discipline
 - `rom-cost-and-implementation-plan.md` — high-level ROM and implementation framing, now updated to point to the lean direction
 - `pitch.md` — sharper product narrative and positioning
 
